@@ -2,11 +2,14 @@
 ##### Hugo Hernández Martín (alu0101481227)
 
 import nltk
+import string
 
 nltk.download('stopwords')
 nltk.download('punkt')
 
 from nltk import word_tokenize
+from nltk.corpus import stopwords
+
 
 def LecturaFichero(nombreFichero = 'PH_train.csv'):
   ph_train = open(nombreFichero)
@@ -26,16 +29,28 @@ def LecturaFichero(nombreFichero = 'PH_train.csv'):
   return [textoCorreo, tipoCorreo]
 
 
-def CreacionVocabulario(TextoLeido):
-  tokens = word_tokenize(TextoLeido)
-  print(tokens)
+def CreacionVocabulario(textoLeido):
+  separador = ' '
+  cadenaTexto = separador.join(textoLeido)
+  minusculas = cadenaTexto.lower()
+  # translate_table = dict((ord(char), ' ') for char in string.punctuation)
+  # sinPuntuacion = minusculas.translate(translate_table)
+  tokens = word_tokenize(minusculas)
+  stop_words = set(stopwords.words('english'))
+  tokens = [word for word in tokens if (word not in stop_words and word.isalpha())]
+  return list(set(tokens))
     
 
 def main():
   print('Analizando vocabulario')
-  # nombreFichero = input('Introduzca el nombre del fichero a leer: ')
   lecturaFichero = LecturaFichero()
-  vocabulario = CreacionVocabulario(lecturaFichero[0])
+  tokens = CreacionVocabulario(lecturaFichero[0])
+  tokens.sort()
+  ficheroEscritura = open('vocabulario.txt', 'w')
+  ficheroEscritura.write('Número de tokens: ' + str(len(tokens)) + '\n')
+  for token in tokens:
+    ficheroEscritura.write(token + '\n')
+  ficheroEscritura.close()
   
 
 if __name__ == "__main__":
