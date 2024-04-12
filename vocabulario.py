@@ -11,6 +11,7 @@ nltk.download('punkt')
 
 from nltk import word_tokenize
 from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer
 
 
 def LecturaFichero(nombreFichero = 'PH_train.csv'):
@@ -84,6 +85,11 @@ def CreacionVocabulario(textoLeido):
       continue
     if noImprimible.search(word) or link.search(word) or etiquetaHTML.search(word):
       tokens.remove(word)
+
+  # stemming
+  stemmer = PorterStemmer()
+  tokens = [stemmer.stem(t) for t in tokens]
+  tokens = list(set(tokens))
   return tokens
     
 
@@ -93,7 +99,7 @@ def main():
   tokens = CreacionVocabulario(lecturaFichero[0])
   tokens.sort()
   # ficheroEscritura = open('vocabulario.txt', 'w')
-  ficheroEscritura = open('vocabulario_prueba_2.txt', 'w')
+  ficheroEscritura = open('vocabulario_prueba_4.txt', 'w')
   ficheroEscritura.write('Número de tokens: ' + str(len(tokens)) + '\n')
   for token in tokens:
     ficheroEscritura.write(token + '\n')
