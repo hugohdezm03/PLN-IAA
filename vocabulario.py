@@ -31,6 +31,31 @@ def LecturaFichero(nombreFichero = 'PH_train.csv'):
   return [textoCorreo, tipoCorreo]
 
 
+# def CreacionVocabulario(textoLeido):
+#   separador = ' '
+#   cadenaTexto = separador.join(textoLeido)
+#   minusculas = cadenaTexto.lower()
+#   translate_table = dict((ord(char), ' ') for char in string.punctuation)
+#   sinPuntuacion = minusculas.translate(translate_table)
+#   tokens = word_tokenize(sinPuntuacion)
+#   stop_words = set(stopwords.words('english'))
+#   # tokens = [word for word in tokens if (word not in stop_words and word.isalpha())]
+#   # tokens = [word for word in tokens if (word not in stop_words)]
+
+#   # patron = r"[^\x00-\x7F]" # Elimina los caracteres ASCII no imprimibles
+#   caracteresNoImprimibles = set(chr(i) for i in range(0, 32))
+#   caracteresNoImprimibles.add(chr(127))
+#   for word in tokens:
+#     if word not in stop_words:
+#       # if not word.isprintable(): # Elimina los caracteres ASCII no imprimibles
+#       #   tokens.remove(word)
+#       if emoji.is_emoji(word): # Elimina los emojis
+#         # print(word)
+#         tokens.remove(word)
+#         tokens.append(emoji.demojize(word))
+      
+#   return list(set(tokens))
+
 def CreacionVocabulario(textoLeido):
   separador = ' '
   cadenaTexto = separador.join(textoLeido)
@@ -39,22 +64,27 @@ def CreacionVocabulario(textoLeido):
   sinPuntuacion = minusculas.translate(translate_table)
   tokens = word_tokenize(sinPuntuacion)
   stop_words = set(stopwords.words('english'))
-  # tokens = [word for word in tokens if (word not in stop_words and word.isalpha())]
-  # tokens = [word for word in tokens if (word not in stop_words)]
 
-  # patron = r"[^\x00-\x7F]" # Elimina los caracteres ASCII no imprimibles
-  caracteresNoImprimibles = set(chr(i) for i in range(0, 32))
-  caracteresNoImprimibles.add(chr(127))
+  # remove duplicates
+  tokens = list(set(tokens))
+  noImprimible = re.compile(r'[^\x20-\x7E]+')
+  link = re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
+  etiquetaHTML = re.compile(r'<[^>]+>')
+  numero = re.compile(r'\d+')
+
   for word in tokens:
-    if word not in stop_words:
-      # if not word.isprintable(): # Elimina los caracteres ASCII no imprimibles
-      #   tokens.remove(word)
-      if emoji.is_emoji(word): # Elimina los emojis
-        # print(word)
-        tokens.remove(word)
-        tokens.append(emoji.demojize(word))
-      
-  return list(set(tokens))
+    if word in stop_words:
+      tokens.remove(word)
+      continue
+    if emoji.is_emoji(word):
+      transformedToken = emoji.demojize(word)
+      tokens.remove(word)
+      tokens.append(transformedToken)
+      print('Emoji: ' + word + ' -> ' + transformedToken)
+      continue
+    if noImprimible.search(word) or link.search(word) or etiquetaHTML.search(word):
+      tokens.remove(word)
+  return tokens
     
 
 def main():
@@ -62,7 +92,8 @@ def main():
   lecturaFichero = LecturaFichero()
   tokens = CreacionVocabulario(lecturaFichero[0])
   tokens.sort()
-  ficheroEscritura = open('vocabulario.txt', 'w')
+  # ficheroEscritura = open('vocabulario.txt', 'w')
+  ficheroEscritura = open('vocabulario_prueba_2.txt', 'w')
   ficheroEscritura.write('Número de tokens: ' + str(len(tokens)) + '\n')
   for token in tokens:
     ficheroEscritura.write(token + '\n')
