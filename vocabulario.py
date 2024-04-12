@@ -3,6 +3,8 @@
 
 import nltk
 import string
+import emoji
+import re
 
 nltk.download('stopwords')
 nltk.download('punkt')
@@ -33,11 +35,25 @@ def CreacionVocabulario(textoLeido):
   separador = ' '
   cadenaTexto = separador.join(textoLeido)
   minusculas = cadenaTexto.lower()
-  # translate_table = dict((ord(char), ' ') for char in string.punctuation)
-  # sinPuntuacion = minusculas.translate(translate_table)
-  tokens = word_tokenize(minusculas)
+  translate_table = dict((ord(char), ' ') for char in string.punctuation)
+  sinPuntuacion = minusculas.translate(translate_table)
+  tokens = word_tokenize(sinPuntuacion)
   stop_words = set(stopwords.words('english'))
-  tokens = [word for word in tokens if (word not in stop_words and word.isalpha())]
+  # tokens = [word for word in tokens if (word not in stop_words and word.isalpha())]
+  # tokens = [word for word in tokens if (word not in stop_words)]
+
+  # patron = r"[^\x00-\x7F]" # Elimina los caracteres ASCII no imprimibles
+  caracteresNoImprimibles = set(chr(i) for i in range(0, 32))
+  caracteresNoImprimibles.add(chr(127))
+  for word in tokens:
+    if word not in stop_words:
+      # if not word.isprintable(): # Elimina los caracteres ASCII no imprimibles
+      #   tokens.remove(word)
+      if emoji.is_emoji(word): # Elimina los emojis
+        # print(word)
+        tokens.remove(word)
+        tokens.append(emoji.demojize(word))
+      
   return list(set(tokens))
     
 
