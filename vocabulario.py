@@ -25,6 +25,7 @@ def LecturaFichero(nombreFichero = 'PH_train.csv'):
   for frase in lineasLeidas:
     if control == 1:
       textoCorreo.append(frase)
+      ## Hacer aquí el procesamiento (eliminar stopwords, puntuación, etc.)
     elif control == 2:
       tipoCorreo.append(frase)
     control += 1
@@ -99,8 +100,8 @@ def main():
   tokens = CreacionVocabulario(lecturaFichero[0])
   tokens.sort()
   # ficheroEscritura = open('vocabulario.txt', 'w')
-  ficheroEscritura = open('vocabulario_prueba_4.txt', 'w')
-  ficheroEscritura.write('Número de tokens: ' + str(len(tokens)) + '\n')
+  ficheroEscritura = open('vocabulario_prueba.txt', 'w')
+  ficheroEscritura.write('Número de palabras: ' + str(len(tokens)) + '\n')
   for token in tokens:
     ficheroEscritura.write(token + '\n')
   ficheroEscritura.close()
