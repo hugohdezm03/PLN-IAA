@@ -145,8 +145,7 @@ def main():
   print('0 - Generar vocabulario')
   print('1 - Separar corpus en safe y phishing')
   print('2 - Generar modelos de lenguaje')
-  print('3 - Clasificar correos')
-  print('4 - Salir')
+  print('3 - Salir')
 
   opcion = input('Opción introducida: ')
   if opcion == '0':
@@ -166,15 +165,12 @@ def main():
     print('Generando modelos de lenguaje')
     archivoVocabulario = open('vocabulario.txt')
     vocabulario = archivoVocabulario.read()
-    # vocabulario = vocabulario.split('\n')[1:]
     vocabulario = vocabulario.split('\n')
     sizeVocabulario = int(vocabulario[0].split(' ')[-1])
     vocabulario = vocabulario[1:]
     generarModeloLenguaje(vocabulario, sizeVocabulario, 'corpusS.txt')
     generarModeloLenguaje(vocabulario, sizeVocabulario, 'corpusP.txt')
   elif opcion == '3':
-    print('Clasificando correos')
-  elif opcion == '4':
     print('Saliendo del programa')
   
 
