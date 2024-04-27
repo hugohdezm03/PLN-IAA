@@ -4,6 +4,7 @@
 import nltk
 import string
 import emoji
+import math
 import re
 
 nltk.download('stopwords')
@@ -13,7 +14,7 @@ from nltk import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 
-
+# Función que lee un fichero y devuelve el texto y el tipo de correo (safe o phishing)
 def LecturaFichero(nombreFichero = 'PH_train.csv'):
   ph_train = open(nombreFichero)
   lineasLeidas = ph_train.read()
@@ -31,32 +32,7 @@ def LecturaFichero(nombreFichero = 'PH_train.csv'):
     control %= 3
   return [textoCorreo, tipoCorreo]
 
-
-# def CreacionVocabulario(textoLeido):
-#   separador = ' '
-#   cadenaTexto = separador.join(textoLeido)
-#   minusculas = cadenaTexto.lower()
-#   translate_table = dict((ord(char), ' ') for char in string.punctuation)
-#   sinPuntuacion = minusculas.translate(translate_table)
-#   tokens = word_tokenize(sinPuntuacion)
-#   stop_words = set(stopwords.words('english'))
-#   # tokens = [word for word in tokens if (word not in stop_words and word.isalpha())]
-#   # tokens = [word for word in tokens if (word not in stop_words)]
-
-#   # patron = r"[^\x00-\x7F]" # Elimina los caracteres ASCII no imprimibles
-#   caracteresNoImprimibles = set(chr(i) for i in range(0, 32))
-#   caracteresNoImprimibles.add(chr(127))
-#   for word in tokens:
-#     if word not in stop_words:
-#       # if not word.isprintable(): # Elimina los caracteres ASCII no imprimibles
-#       #   tokens.remove(word)
-#       if emoji.is_emoji(word): # Elimina los emojis
-#         # print(word)
-#         tokens.remove(word)
-#         tokens.append(emoji.demojize(word))
-      
-#   return list(set(tokens))
-
+# Función que crea dos corpus separados, uno para los correos seguros y otro para los correos de phishing
 def CreacionCorpusSeparados():
   lecturaFichero = LecturaFichero()
 
@@ -81,6 +57,9 @@ def CreacionCorpusSeparados():
   ficheroEscrituraSafe.close()
   ficheroEscrituraPhishing.close()
 
+# Función que crea un vocabulario a partir de un texto leído
+# Si el segundo parámetro es True, se eliminarán las palabras repetidas
+# Si el segundo parámetro es False, se mantendrán las palabras repetidas (procesamiento de corpus)
 def CreacionVocabulario(textoLeido, eliminarRepetidos = True):
   separador = ' '
   cadenaTexto = separador.join(textoLeido)
@@ -125,26 +104,17 @@ def CreacionVocabulario(textoLeido, eliminarRepetidos = True):
   
   return vocabulario
 
-  # # stemming
-  # stemmer = PorterStemmer()
-  # tokens = [stemmer.stem(t) for t in tokens]
-
-  # if eliminarRepetidos:
-  #   # remove duplicates
-  #   tokens = list(set(tokens))
-  
-  # return tokens
-
-
-def generarModeloLenguaje(vocabulario, nombreCorpus = 'corpus-safe.csv', minimoContador = 1):
+# Función que genera un modelo de lenguaje a partir de un vocabulario y un corpus
+def generarModeloLenguaje(vocabulario, sizeVocabulario, nombreCorpus, minimoContador = 1):
+  print('Generando modelo de lenguaje para el corpus ' + nombreCorpus)
   corpusLeido = LecturaFichero(nombreCorpus)
+  sizeCorpus = len(corpusLeido[0])
   corpusProcesado = CreacionVocabulario(corpusLeido[0], False)
-  corpusProcesado.sort()
+  # corpusProcesado.sort()
+
   informacion = []
-
-  print(len(vocabulario))
-
   mapaPalabras = {}
+
   for palabra in corpusProcesado:
     if palabra in mapaPalabras:
       mapaPalabras[palabra] += 1
@@ -157,11 +127,17 @@ def generarModeloLenguaje(vocabulario, nombreCorpus = 'corpus-safe.csv', minimoC
     else:
       informacion.append([token, 0])
 
-  nombreFicheroEscritura = nombreCorpus.split('.')[0] + '-modeloLenguaje.txt'
+  nombreFicheroEscritura = 'modelo_lenguaje_' + nombreCorpus.split('.')[0][-1] + '.txt'
   ficheroEscritura = open(nombreFicheroEscritura, 'w')
 
+  ficheroEscritura.write('Numero de documentos (noticias) del corpus: ' + str(sizeCorpus) + '\n')
+  ficheroEscritura.write('Número de palabras del corpus: ' + str(len(corpusProcesado)))
+
   for [token, contadorPalabra] in informacion:
-    ficheroEscritura.write(token + ' ' + str(contadorPalabra) + '\n')
+    resultado = '\nPalabra: ' + token
+    resultado += ' Frec: ' + str(contadorPalabra)
+    resultado += ' LogProb: ' + str(math.log((contadorPalabra + 1) / (len(corpusProcesado) + sizeVocabulario)))
+    ficheroEscritura.write(resultado)
   ficheroEscritura.close()
 
   
@@ -178,23 +154,24 @@ def main():
     lecturaFichero = LecturaFichero()
     tokens = CreacionVocabulario(lecturaFichero[0])
     tokens.sort()
-    # ficheroEscritura = open('vocabulario.txt', 'w')
     ficheroEscritura = open('vocabulario.txt', 'w')
-    ficheroEscritura.write('Número de palabras: ' + str(len(tokens)) + '\n')
+    ficheroEscritura.write('Número de palabras: ' + str(len(tokens)))
     for token in tokens:
-      ficheroEscritura.write(token + '\n')
+      ficheroEscritura.write('\n' + token)
     ficheroEscritura.close()
   elif opcion == '1':
     print('Separando corpus en safe y phishing')
     CreacionCorpusSeparados()
   elif opcion == '2':
     print('Generando modelos de lenguaje')
-    archivoVocabulario = open('vocabulario_prueba.txt')
+    archivoVocabulario = open('vocabulario.txt')
     vocabulario = archivoVocabulario.read()
-    vocabulario = vocabulario.split('\n')[1:]
-    # generarModeloLenguaje(vocabulario, 'prueba.csv')
-    generarModeloLenguaje(vocabulario, 'corpus-safe.csv')
-    generarModeloLenguaje(vocabulario, 'corpus-phishing.csv')
+    # vocabulario = vocabulario.split('\n')[1:]
+    vocabulario = vocabulario.split('\n')
+    sizeVocabulario = int(vocabulario[0].split(' ')[-1])
+    vocabulario = vocabulario[1:]
+    generarModeloLenguaje(vocabulario, sizeVocabulario, 'corpusS.txt')
+    generarModeloLenguaje(vocabulario, sizeVocabulario, 'corpusP.txt')
   elif opcion == '3':
     print('Clasificando correos')
   elif opcion == '4':
