@@ -2,6 +2,8 @@
 ##### Hugo Hernández Martín (alu0101481227)
 ##### Funciones auxiliares para generar y leer archivos con correo y número (sin clase)
 
+import pln
+
 def generarFicheroSinClase(nombreFicheroLectura, nombreFicheroEscritura):
   ph_train = open(nombreFicheroLectura)
   lineasLeidas = ph_train.read()
@@ -40,16 +42,20 @@ def leerFicheroSinClase(nombreFichero):
 
 
 def dividirFicheroPorLineas(nombreFichero, limiteLineas):
-  lineas = leerFicheroSinClase(nombreFichero)
+  lineas = pln.LecturaFichero(nombreFichero)
+
   fichero_escritura = open('PH_train_1.csv', 'w')
-  fichero_escritura.write('Number;EmailText;\n')
+  fichero_escritura.write('Number;EmailText;EmailType;\n')
   for i in range(0, limiteLineas):
-    fichero_escritura.write(str(i) + ';' + lineas[i] + ';\n')
+    fichero_escritura.write(str(i) + ';' + lineas[0][i] + ';' + lineas[1][i] + ';\n')
   fichero_escritura.close()
+  
   fichero_escritura = open('PH_train_2.csv', 'w')
-  fichero_escritura.write('Number;EmailText;\n')
-  for i in range(limiteLineas, len(lineas)):
-    fichero_escritura.write(str(i) + ';' + lineas[i] + ';\n')
+  fichero_escritura.write('Number;EmailText;EmailType;\n')
+  for i in range(limiteLineas, len(lineas[0])):
+    fichero_escritura.write(str(i) + ';' + lineas[0][i] + ';' + lineas[1][i] + ';\n')
+  fichero_escritura.close()
+
 
 def main():
   print('0 - Generar fichero sin clase')
@@ -65,7 +71,7 @@ def main():
     print(len(leerFicheroSinClase(nombreFichero)))
   elif opcion == '2':
     nombreFichero = input('Introduce el nombre del fichero a leer: ')
-    lineaDivision = int(input('Introduce el número de líneas del fichero pequeño: '))
+    lineaDivision = int(input('Introduce el número de líneas del fichero: '))
     dividirFicheroPorLineas(nombreFichero, lineaDivision)
   else:
     print('Opción no válida.')

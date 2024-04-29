@@ -4,11 +4,13 @@
 import pln
 
 def main():
-  clasesEsperadas = pln.LecturaFichero('PH_train.csv')[1]
+  ficheroClasesEsperadas = input('Introduce el nombre del fichero con las clases esperadas (por defecto PH_train.csv): ') or 'PH_train.csv'
+  clasesEsperadas = pln.LecturaFichero(ficheroClasesEsperadas)[1]
+  ficheroResumen = input('Introduce el nombre del fichero con el resumen de los resultados (por defecto resumen_alu0101481227.csv): ') or 'resumen_alu0101481227.csv'
   resumenResultados = open('resumen_alu0101481227.csv')
   clasesObtenidas = resumenResultados.read().split('\n')
   
-  print(clasesEsperadas[0:10])
+  # print(clasesEsperadas[0:10])
 
   for i in range(len(clasesEsperadas)):
     if clasesEsperadas[i] == 'Safe Email':
@@ -16,7 +18,7 @@ def main():
     else:
       clasesEsperadas[i] = 'P'
   
-  print(clasesEsperadas[0:10])
+  # print(clasesEsperadas[0:10])
 
   contador_errores = 0
   for i in range(len(clasesEsperadas)):

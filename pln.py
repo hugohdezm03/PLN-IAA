@@ -34,7 +34,8 @@ def LecturaFichero(nombreFichero = 'PH_train.csv'):
 
 # Función que crea dos corpus separados, uno para los correos seguros y otro para los correos de phishing
 def CreacionCorpusSeparados():
-  lecturaFichero = LecturaFichero()
+  nombreFichero = input('Introduce el nombre del fichero a separar (por defecto PH_train.csv): ') or 'PH_train.csv'
+  lecturaFichero = LecturaFichero(nombreFichero)
 
   safe = []
   phishing = []
@@ -103,7 +104,7 @@ def Procesado(textoLeido, eliminarRepetidos = True):
   return vocabulario
 
 # Función que genera un modelo de lenguaje a partir de un vocabulario y un corpus
-def generarModeloLenguaje(vocabulario, sizeVocabulario, nombreCorpus, minimoContador = 1):
+def generarModeloLenguaje(vocabulario, sizeVocabulario, nombreCorpus):
   print('Generando modelo de lenguaje para el corpus ' + nombreCorpus)
   corpusLeido = LecturaFichero(nombreCorpus)
   sizeCorpus = len(corpusLeido[0])
@@ -148,7 +149,8 @@ def main():
   opcion = input('Opción introducida: ')
   if opcion == '0':
     print('Analizando vocabulario')
-    lecturaFichero = LecturaFichero()
+    corpus = input('Introduce el nombre del fichero de vocabulario: ')
+    lecturaFichero = LecturaFichero(corpus)
     tokens = Procesado(lecturaFichero[0])
     tokens.append('<UNK>')
     tokens.sort()
@@ -167,8 +169,10 @@ def main():
     vocabulario = vocabulario.split('\n')
     sizeVocabulario = int(vocabulario[0].split(' ')[-1])
     vocabulario = vocabulario[1:]
-    generarModeloLenguaje(vocabulario, sizeVocabulario, 'corpusS.txt')
-    generarModeloLenguaje(vocabulario, sizeVocabulario, 'corpusP.txt')
+    corpusS = input('Introduce el nombre del corpus de correos seguros: ')
+    corpusP = input('Introduce el nombre del corpus de correos de phishing: ')
+    generarModeloLenguaje(vocabulario, sizeVocabulario, corpusS)
+    generarModeloLenguaje(vocabulario, sizeVocabulario, corpusP)
   elif opcion == '3':
     print('Saliendo del programa')
   
