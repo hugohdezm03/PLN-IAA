@@ -60,7 +60,7 @@ def CreacionCorpusSeparados():
 # Función que crea un vocabulario a partir de un texto leído
 # Si el segundo parámetro es True, se eliminarán las palabras repetidas
 # Si el segundo parámetro es False, se mantendrán las palabras repetidas (procesamiento de corpus)
-def CreacionVocabulario(textoLeido, eliminarRepetidos = True):
+def Procesado(textoLeido, eliminarRepetidos = True):
   separador = ' '
   cadenaTexto = separador.join(textoLeido)
   minusculas = cadenaTexto.lower()
@@ -72,10 +72,6 @@ def CreacionVocabulario(textoLeido, eliminarRepetidos = True):
   # remove duplicates
   if eliminarRepetidos:
     tokens = list(set(tokens))
-  
-  # noImprimible = re.compile(r'[^\x20-\x7E]+')
-  # link = re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
-  # etiquetaHTML = re.compile(r'<[^>]+>')
 
   vocabulario = []
   for word in tokens:
@@ -90,8 +86,11 @@ def CreacionVocabulario(textoLeido, eliminarRepetidos = True):
         continue
       if word.isnumeric():
         vocabulario.append('<numero' + str(len(word)) + '>')
+        # vocabulario.append(word)
       else:
         vocabulario.append('<alfanumerico' + str(len(word)) + '>')
+        # vocabulario.append('<alfanumerico>')
+        # vocabulario.append(word)
 
   # stemming
   stemmer = PorterStemmer()
@@ -100,7 +99,6 @@ def CreacionVocabulario(textoLeido, eliminarRepetidos = True):
   # remove duplicates
   if eliminarRepetidos:
     vocabulario = list(set(vocabulario))
-    vocabulario.append('<UNK>')
   
   return vocabulario
 
@@ -109,7 +107,7 @@ def generarModeloLenguaje(vocabulario, sizeVocabulario, nombreCorpus, minimoCont
   print('Generando modelo de lenguaje para el corpus ' + nombreCorpus)
   corpusLeido = LecturaFichero(nombreCorpus)
   sizeCorpus = len(corpusLeido[0])
-  corpusProcesado = CreacionVocabulario(corpusLeido[0], False)
+  corpusProcesado = Procesado(corpusLeido[0], False)
   # corpusProcesado.sort()
 
   informacion = []
@@ -151,7 +149,8 @@ def main():
   if opcion == '0':
     print('Analizando vocabulario')
     lecturaFichero = LecturaFichero()
-    tokens = CreacionVocabulario(lecturaFichero[0])
+    tokens = Procesado(lecturaFichero[0])
+    tokens.append('<UNK>')
     tokens.sort()
     ficheroEscritura = open('vocabulario.txt', 'w')
     ficheroEscritura.write('Número de palabras: ' + str(len(tokens)))
