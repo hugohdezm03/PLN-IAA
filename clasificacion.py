@@ -34,11 +34,18 @@ def lecturaModeloLenguaje(nombreFichero):
 def main():
   corpusClasificar = input('Introduce el nombre del fichero a clasificar (por defecto PH_train_sin_clases.csv): ') or 'PH_train_sin_clases.csv'
   print(corpusClasificar)
-  lecturaFichero = f.leerFicheroSinClase(corpusClasificar)
+
+  ############## SEGÚN EL FORMATO DEL FICHERO DE CLASES ESPERADAS ################
+  lecturaFichero = f.leerFicheroSinClase(corpusClasificar)    # Fichero con ';' como separador
+  # lecturaFichero = f.leerFicheroSinClaseCsv(corpusClasificar)   # Fichero CSV (';' como separador y una línea para cada entrada)
+
   print('Fichero leído con ' + str(len(lecturaFichero)) + ' correos.')
 
-  modeloLenguajePhishing = lecturaModeloLenguaje('modelo_lenguaje_P.txt')
-  modeloLenguajeSafe = lecturaModeloLenguaje('modelo_lenguaje_S.txt')
+  nombreModeloPhishing = input('Introduce el nombre del fichero con el modelo de lenguaje de phishing (por defecto modelo_lenguaje_P.txt): ') or 'modelo_lenguaje_P.txt'
+  nombreModeloSafe = input('Introduce el nombre del fichero con el modelo de lenguaje de correos seguros (por defecto modelo_lenguaje_S.txt): ') or 'modelo_lenguaje_S.txt'
+
+  modeloLenguajePhishing = lecturaModeloLenguaje(nombreModeloPhishing)
+  modeloLenguajeSafe = lecturaModeloLenguaje(nombreModeloSafe)
 
   probabilidadesPhishing = modeloLenguajePhishing[2]
   probabilidadesSafe = modeloLenguajeSafe[2]

@@ -7,8 +7,8 @@ import emoji
 import math
 import re
 
-nltk.download('stopwords')
-nltk.download('punkt')
+# nltk.download('stopwords')
+# nltk.download('punkt')
 
 from nltk import word_tokenize
 from nltk.corpus import stopwords
@@ -149,7 +149,7 @@ def main():
   opcion = input('Opción introducida: ')
   if opcion == '0':
     print('Analizando vocabulario')
-    corpus = input('Introduce el nombre del fichero de vocabulario: ')
+    corpus = input('Introduce el nombre del fichero con el corpus (por defecto PH_train.csv): ') or 'PH_train.csv'
     lecturaFichero = LecturaFichero(corpus)
     tokens = Procesado(lecturaFichero[0])
     tokens.append('<UNK>')
@@ -169,8 +169,8 @@ def main():
     vocabulario = vocabulario.split('\n')
     sizeVocabulario = int(vocabulario[0].split(' ')[-1])
     vocabulario = vocabulario[1:]
-    corpusS = input('Introduce el nombre del corpus de correos seguros: ')
-    corpusP = input('Introduce el nombre del corpus de correos de phishing: ')
+    corpusS = input('Introduce el nombre del corpus de correos seguros (por defecto corpusS.txt): ') or 'corpusS.txt'
+    corpusP = input('Introduce el nombre del corpus de correos de phishing (por defecto corpusP.txt): ') or 'corpusP.txt'
     generarModeloLenguaje(vocabulario, sizeVocabulario, corpusS)
     generarModeloLenguaje(vocabulario, sizeVocabulario, corpusP)
   elif opcion == '3':
