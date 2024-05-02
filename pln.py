@@ -14,6 +14,13 @@ from nltk import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 
+import pandas as pd
+def LecturaFicheroCsv(nombreFichero = 'PH_train.csv'):
+  ph_train = pd.read_csv(nombreFichero, sep=';')
+  textoCorreo = ph_train['EmailText']
+  tipoCorreo = ph_train['EmailType']
+  return [textoCorreo, tipoCorreo]
+
 # Función que lee un fichero y devuelve el texto y el tipo de correo (safe o phishing)
 def LecturaFichero(nombreFichero = 'PH_train.csv'):
   ph_train = open(nombreFichero)
@@ -35,7 +42,8 @@ def LecturaFichero(nombreFichero = 'PH_train.csv'):
 # Función que crea dos corpus separados, uno para los correos seguros y otro para los correos de phishing
 def CreacionCorpusSeparados():
   nombreFichero = input('Introduce el nombre del fichero a separar (por defecto PH_train.csv): ') or 'PH_train.csv'
-  lecturaFichero = LecturaFichero(nombreFichero)
+  # lecturaFichero = LecturaFichero(nombreFichero) # Usado con ficheros con separador ';'
+  lecturaFichero = LecturaFicheroCsv(nombreFichero) # Usado con ficheros CSV
 
   safe = []
   phishing = []
@@ -48,13 +56,25 @@ def CreacionCorpusSeparados():
   ficheroEscrituraSafe = open('corpusS.txt', 'w')
   ficheroEscrituraPhishing = open('corpusP.txt', 'w')
 
-  ficheroEscrituraSafe.write('Number;EmailText;EmailType;\n')
-  ficheroEscrituraPhishing.write('Number;EmailText;EmailType;\n')
+  ##################### Usado con ficheros con separador ';' #####################
+  # ficheroEscrituraSafe.write('Number;EmailText;EmailType;\n')
+  # ficheroEscrituraPhishing.write('Number;EmailText;EmailType;\n')
+
+  # for [numero, correo, tipo] in safe:
+  #   ficheroEscrituraSafe.write(numero + ';' + correo + ';' + tipo + ';\n')
+  # for [numero, correo, tipo] in phishing:
+  #   ficheroEscrituraPhishing.write(numero + ';' + correo + ';' + tipo + ';\n')
+  # ficheroEscrituraSafe.close()
+  # ficheroEscrituraPhishing.close()
+
+  ##################### Usado con ficheros CSV #####################
+  ficheroEscrituraSafe.write('Number;EmailText;EmailType\n')
+  ficheroEscrituraPhishing.write('Number;EmailText;EmailType\n')
 
   for [numero, correo, tipo] in safe:
-    ficheroEscrituraSafe.write(numero + ';' + correo + ';' + tipo + ';\n')
+    ficheroEscrituraSafe.write(numero + ';' + correo + ';' + tipo + '\n')
   for [numero, correo, tipo] in phishing:
-    ficheroEscrituraPhishing.write(numero + ';' + correo + ';' + tipo + ';\n')
+    ficheroEscrituraPhishing.write(numero + ';' + correo + ';' + tipo + '\n')
   ficheroEscrituraSafe.close()
   ficheroEscrituraPhishing.close()
 
@@ -106,7 +126,10 @@ def Procesado(textoLeido, eliminarRepetidos = True):
 # Función que genera un modelo de lenguaje a partir de un vocabulario y un corpus
 def generarModeloLenguaje(vocabulario, sizeVocabulario, nombreCorpus):
   print('Generando modelo de lenguaje para el corpus ' + nombreCorpus)
-  corpusLeido = LecturaFichero(nombreCorpus)
+
+  # corpusLeido = LecturaFichero(nombreCorpus)  # Usado con ficheros con separador ';'
+  corpusLeido = LecturaFicheroCsv(nombreCorpus) # Usado con ficheros CSV
+  
   sizeCorpus = len(corpusLeido[0])
   corpusProcesado = Procesado(corpusLeido[0], False)
   # corpusProcesado.sort()
@@ -150,7 +173,8 @@ def main():
   if opcion == '0':
     print('Analizando vocabulario')
     corpus = input('Introduce el nombre del fichero con el corpus (por defecto PH_train.csv): ') or 'PH_train.csv'
-    lecturaFichero = LecturaFichero(corpus)
+    # lecturaFichero = LecturaFichero(corpus)
+    lecturaFichero = LecturaFicheroCsv(corpus)
     tokens = Procesado(lecturaFichero[0])
     tokens.append('<UNK>')
     tokens.sort()
