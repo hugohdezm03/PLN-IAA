@@ -4,6 +4,8 @@
 
 import pln
 
+import pandas as pd
+
 def generarFicheroSinClase(nombreFicheroLectura, nombreFicheroEscritura):
   ph_train = open(nombreFicheroLectura)
   lineasLeidas = ph_train.read()
@@ -98,12 +100,24 @@ def leerFicheroSinClaseCsv(nombreFichero):
 
   return correos
 
+
+def leerFicheroSinClasePandas(nombreFichero):
+  df = pd.read_csv(nombreFichero, delimiter=';')
+  return df['Email Text'].tolist()
+
+
+def leerClasesEsperadasPandas(nombreFichero):
+  df = pd.read_csv(nombreFichero, delimiter=';')
+  return df['EmailType'].tolist()
+
 def main():
   print('0 - Generar fichero sin clase')
   print('1 - Leer fichero sin clase')
   print('2 - Dividir fichero por lineas')
   print('3 - Lectura de fichero csv')
   print('4 - Generación de fichero sin clase a partir de csv')
+  print('5 - Leer fichero sin clase con pandas')
+  print('6 - Leer clases esperadas con pandas')
   opcion = input('Introduce una opción: ')
   if opcion == '0':
     nombreFicheroLectura = input('Introduce el nombre del fichero a leer: ')
@@ -127,6 +141,17 @@ def main():
     nombreFicheroLectura = input('Introduce el nombre del csv con clases: ')
     nombreFicheroEscritura = input('Introduce el nombre para el fichero generado sin clases: ')
     generarFicheroSinClaseCsv(nombreFicheroLectura, nombreFicheroEscritura)
+  elif opcion == '5':
+    nombreFichero = input('Introduce el nombre del fichero a leer: ')
+    correos = leerFicheroSinClasePandas(nombreFichero)
+    print(correos[0:2])
+    print(len(correos))
+  elif opcion == '6':
+    nombreFichero = input('Introduce el nombre del fichero a leer: ')
+    clases = leerClasesEsperadasPandas(nombreFichero)
+    print(clases[0:10])
+    print(len(clases))
+    
   else:
     print('Opción no válida.')
 
