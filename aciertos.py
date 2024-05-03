@@ -9,8 +9,8 @@ def main():
 
   ############## SEGÚN EL FORMATO DEL FICHERO DE CLASES ESPERADAS ################
   # clasesEsperadas = pln.LecturaFichero(ficheroClasesEsperadas)[1]  # Fichero con ';' como separador
-  clasesEsperadas = f.lecturaCsv(ficheroClasesEsperadas)[1]          # Fichero CSV (';' como separador y una línea para cada entrada)
-  # clasesEsperadas = f.leerClasesEsperadasPandas(ficheroClasesEsperadas)  # Fichero CSV (';' como separador y una línea para cada entrada
+  # clasesEsperadas = f.lecturaCsv(ficheroClasesEsperadas)[1]          # Fichero CSV (';' como separador y una línea para cada entrada)
+  clasesEsperadas = f.leerClasesEsperadasPandas(ficheroClasesEsperadas)  # Fichero CSV (';' como separador y una línea para cada entrada
 
   ficheroResumen = input('Introduce el nombre del fichero con el resumen de los resultados (por defecto resumen_alu0101481227.csv): ') or 'resumen_alu0101481227.csv'
   resumenResultados = open(ficheroResumen)

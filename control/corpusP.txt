@@ -1,0 +1,5 @@
+Number;EmailText;EmailType
+4;desechar cuestion rapidamente;Phising Email
+5;analizar disparate cuestion;Phising Email
+6;examinar respuesta absurda;Phising Email
+7;desechar respuesta incongruente;Phising Email

@@ -1,0 +1,16 @@
+Numero de documentos (noticias) del corpus: 4
+Número de palabras del corpus: 12
+Palabra: <UNK> Frec: 0 LogProb: -3.258096538021482
+Palabra: absurda Frec: 0 LogProb: -3.258096538021482
+Palabra: analizar Frec: 1 LogProb: -2.5649493574615367
+Palabra: cuestion Frec: 2 LogProb: -2.159484249353372
+Palabra: desechar Frec: 0 LogProb: -3.258096538021482
+Palabra: detalladament Frec: 1 LogProb: -2.5649493574615367
+Palabra: dispar Frec: 0 LogProb: -3.258096538021482
+Palabra: estudiar Frec: 2 LogProb: -2.159484249353372
+Palabra: examinar Frec: 1 LogProb: -2.5649493574615367
+Palabra: incongruent Frec: 0 LogProb: -3.258096538021482
+Palabra: interesadament Frec: 2 LogProb: -2.159484249353372
+Palabra: largament Frec: 1 LogProb: -2.5649493574615367
+Palabra: rapidament Frec: 0 LogProb: -3.258096538021482
+Palabra: respuesta Frec: 2 LogProb: -2.159484249353372

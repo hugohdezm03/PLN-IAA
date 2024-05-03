@@ -1,0 +1,9 @@
+Number;EmailText;EmailType
+0;estudiar cuestion detalladamente;Safe Email
+1;analizar cuestion largamente;Safe Email
+2;examinar respuesta interesadamente;Safe Email
+3;estudiar respuesta interesadamente;Safe Email
+4;desechar cuestion rapidamente;Phising Email
+5;analizar disparate cuestion;Phising Email
+6;examinar respuesta absurda;Phising Email
+7;desechar respuesta incongruente;Phising Email

@@ -102,8 +102,8 @@ def leerFicheroSinClaseCsv(nombreFichero):
 
 
 def leerFicheroSinClasePandas(nombreFichero):
-  df = pd.read_csv(nombreFichero, delimiter=';')
-  return df['Email Text'].tolist()
+  df = pd.read_csv(nombreFichero, delimiter=',')
+  return df['EmailText'].tolist()
 
 
 def leerClasesEsperadasPandas(nombreFichero):

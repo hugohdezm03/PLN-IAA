@@ -37,8 +37,8 @@ def main():
 
   ############## SEGÚN EL FORMATO DEL FICHERO DE CLASES ESPERADAS ################
   # lecturaFichero = f.leerFicheroSinClase(corpusClasificar)    # Fichero con ';' como separador
-  lecturaFichero = f.leerFicheroSinClaseCsv(corpusClasificar)   # Fichero CSV (';' como separador y una línea para cada entrada)
-  # lecturaFichero = f.leerFicheroSinClasePandas(corpusClasificar)  # Fichero CSV (';' como separador y una línea para cada entrada)
+  # lecturaFichero = f.leerFicheroSinClaseCsv(corpusClasificar)   # Fichero CSV (';' como separador y una línea para cada entrada)
+  lecturaFichero = f.leerFicheroSinClasePandas(corpusClasificar)  # Fichero CSV (';' como separador y una línea para cada entrada)
 
   print('Fichero leído con ' + str(len(lecturaFichero)) + ' correos.')
 
@@ -61,7 +61,12 @@ def main():
   probabilidadCorreoSafe = []
   clasificacion = []
 
+  print(lecturaFichero[0])
+
   for correo in lecturaFichero:
+
+    correo = str(correo)
+    
     caracteres.append(correo[0:10])
     tokens = pln.Procesado([correo], False)
     probabilidadP = probabilidadPhishing
